@@ -1,4 +1,4 @@
-import http from 'node:http' // O padrão de importações ESMODULES hoje em dia é mais utilizado
+import http from 'node:http' // O padrão de importações ESMODULES hoje em dia é mais utilizado. O node: antes do nome do módulo indica que é nativo do node
 
 // req -> São todas as informações de requisição ou seja o que está chamando o servidodr
 // res -> São as respostas que o servidor irá devolver para o usuário
@@ -9,23 +9,23 @@ const server = http.createServer((req, res) => { // Criando meu servidor HTTP co
     
     const { method, url } = req // essas duas sendo métodos de REQUISIÇÃO
 
-    if(method === 'GET' && url === '/users') { // Posso ter métodos HTTP diferentes mas com urls iguais
+    if (method === 'GET' && url === '/users') { // Posso ter métodos HTTP diferentes mas com urls iguais
         return res
         .setHeader('Content-type', 'application/JSON') // setando um header para o programa interpretar e retornar o valor em uma estrutura de dados
         .end(JSON.stringify(users)) // O node não pode retornar um array, então usamos o JSON para converter os dados para serem então mostrados na tela
     }
 
-    if(method === 'POST' && url === '/users') {
+    if (method === 'POST' && url === '/users') {
         users.push({
             id: 1,
             name: 'Cleyton',
             email: 'cleyton@email.com'
         })
  
-        return res.end('Criação de usuários') // Cada método com seu resultado
+        return res.writeHead(201).end() // o 201 está simbolizando como OK, com sucesso na criação de algo
     }
 
-    return res.end('Hello, World!') // Se não bater em nenhum destes métodos retorna então essa response
+    return res.writeHead(404).end() // O 404 simboliza que esta rota não existe
 })
 
 server.listen(3333) // Fazer com que o server escute na porta 3333 no localhost
