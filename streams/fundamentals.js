@@ -1,5 +1,26 @@
-// Quando pensamos em 'streams' a primeira coisa que vem na cabeça é Netfix, Spotify etc
-// O conceito de streams é utilizado para uploads de arquivos, quando lemos dados que vem da requisição HTTP aos poucos, e processando eles enquanto roda o upload.
+// REDABLE E WRITABLE STREAMS
+process.stdin.pipe(process.stdout) // lendo (stdin) e escrevendo (stdout) o que o usuário digita, para ele ser lida aos poucos utiliza o '.pipe'
 
-// Writalble Streams -> São streams que aos poucos vão mandando informações para o front-end Netfix & Spotify
-// Redable Strams -> São streams que precisamos ler o arquivo aos poucos
+// CONSTRUIR STREAMS DO 0
+
+import { Readable } from 'node:stream'
+
+class OneToHundredStream extends Readable {
+    index = 1
+
+    _read() { // Método obrigatório!
+        const i = this.index++ // somando 1
+
+        setTimeout(() => { // setando um tempo de 1 sec
+        if (i > 100) {
+            this.push(null) // o push é o método para uma readable stream fornecer informações para quem estiver consumindo ela
+        } else {
+            const buf = Buffer.from(String(i)) // Streams não aceitam tipos primitivos apenas buffer, convertendo i para uma string pois buffer não aceita number
+
+            this.push(buf) // Se não chegou até 100, então executa
+        }
+        }, 1000)
+    }
+}
+
+new OneToHundredStream().pipe(process.stdout) // lendo a stream e retornando o valor no terminal, mostrando os dados mesmo sem estar completo
