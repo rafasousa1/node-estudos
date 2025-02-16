@@ -3,9 +3,9 @@ process.stdin.pipe(process.stdout) // lendo (stdin) e escrevendo (stdout) o que 
 
 // CONSTRUIR STREAMS DO 0
 
-import { Readable } from 'node:stream'
+import { Readable, Writable, Transform } from 'node:stream'
 
-class OneToHundredStream extends Readable {
+class OneToHundredStream extends Readable { // Lendo dados
     index = 1
 
     _read() { // Método obrigatório!
@@ -23,4 +23,22 @@ class OneToHundredStream extends Readable {
     }
 }
 
-new OneToHundredStream().pipe(process.stdout) // lendo a stream e retornando o valor no terminal, mostrando os dados mesmo sem estar completo
+ class InverseNumberStream extends Transform { // Transformando uma chunk em outra
+    _transform(chunk, encoding, callback) {
+        const transformed = Number(chunk.toString()) * -1 // Pegando o chunk e fazendo . -1 para ficar negativo
+
+        callback(null, Buffer.from(String(transformed))) // 1° parâmetro do callback é em caso de erro / 2° parâmetro é a transformação (lembra de colocar em buffer)
+    }
+ }
+
+class MultiplyByTenStream extends Writable { // Processa dados enquanto o arquivo é lido, não retorna nada
+    _write(chunk, encoding, callback) { // Método obrigatório!
+        console.log(Number(chunk.toString()) * 10) // Pegando o buffer e convertendo para string para mostrar no termial
+        callback() // finalizando
+    }
+}
+
+
+new OneToHundredStream()
+.pipe(new InverseNumberStream())
+.pipe(new MultiplyByTenStream()) // lendo a stream e escrevendo os dados da stream de escrita, neste caso pegando os nums e multiplicando por 10
