@@ -1,0 +1,31 @@
+// SIMULANDO UMA REQUISIÇÃO FICTÍCIA COM O FETCH
+
+import { Readable } from 'node:stream'
+
+class OneToHundredStream extends Readable { // Lendo dados
+    index = 1
+
+    _read() { // Método obrigatório!
+        const i = this.index++ // somando 1
+
+        setTimeout(() => { // setando um tempo de 1 sec
+        if (i > 100) {
+            this.push(null) // o push é o método para uma readable stream fornecer informações para quem estiver consumindo ela
+        } else {
+            const buf = Buffer.from(String(i)) // Streams não aceitam tipos primitivos apenas buffer, convertendo i para uma string pois buffer não aceita number
+
+            this.push(buf) // Se não chegou até 100, então executa
+        }
+        }, 1000)
+    }
+}
+
+fetch('http://localhost:3334', {
+    method: 'POST',
+    body: new OneToHundredStream(),
+    duplex: 'half'
+}).then(response => response.text()).then(data => {
+    console.log("Response from server:", data)
+}).catch(err => {
+    console.error("Error:", err)
+})
