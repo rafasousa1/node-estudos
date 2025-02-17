@@ -20,10 +20,10 @@ class OneToHundredStream extends Readable { // Lendo dados
     }
 }
 
-fetch('http://localhost:3334', {
-    method: 'POST',
-    body: new OneToHundredStream(),
-    duplex: 'half'
+fetch('http://localhost:3334', { // Conectando com o servidor 3334 por uma requisição http
+    method: 'POST', // fetch aceita apenas 'POST' ou 'PUT'
+    body: new OneToHundredStream(), // Corpo da requisição, ou seja o que vai ser executado
+    duplex: 'half' // a comunicação ocorre em uma única direção por vez
 }).then(response => response.text()).then(data => {
     console.log("Response from server:", data)
 }).catch(err => {
