@@ -9,7 +9,7 @@ class OneToHundredStream extends Readable { // Lendo dados
         const i = this.index++ // somando 1
 
         setTimeout(() => { // setando um tempo de 1 sec
-        if (i > 100) {
+        if (i > 5) {
             this.push(null) // o push é o método para uma readable stream fornecer informações para quem estiver consumindo ela
         } else {
             const buf = Buffer.from(String(i)) // Streams não aceitam tipos primitivos apenas buffer, convertendo i para uma string pois buffer não aceita number
@@ -24,8 +24,8 @@ fetch('http://localhost:3334', { // Conectando com o servidor 3334 por uma requi
     method: 'POST', // fetch aceita apenas 'POST' ou 'PUT'
     body: new OneToHundredStream(), // Corpo da requisição, ou seja o que vai ser executado
     duplex: 'half' // a comunicação ocorre em uma única direção por vez
-}).then(response => response.text()).then(data => {
-    console.log("Response from server:", data)
+}).then(response => response.text()).then(data => { // Tratamento de erro
+    console.log(data)
 }).catch(err => {
-    console.error("Error:", err)
+    console.error(err)
 })
