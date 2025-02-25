@@ -5,7 +5,20 @@ import http from 'node:http' // O padrão de importações ESMODULES hoje em dia
 
 const users = [] // Esta maneira de guardar informações em memória são aplicações stateful
 
-const server = http.createServer((req, res) => { // Criando meu servidor HTTP com uma arrow function
+const server = http.createServer(async (req, res) => { // Criando meu servidor HTTP com uma arrow function
+    const buffers = [] // Pedaços que irá receber da stream
+
+    for await(const chunk of req) { // Percorrer a stream de req, aguardando cada pedaço da stream ser retornado
+        buffers.push(chunk) // adicionando os pedaços da stream no array de buffers
+    }
+
+    try {
+        req.body = JSON.parse(Buffer.concat(buffers).toString()) // Colocando o corpo da requisição como um JSON
+    } catch {
+        req.body = null // Caso se não ter um corpo na requisição, ele retorna como null 
+    }
+    
+    console.log(req.body)
     
     const { method, url } = req // essas duas sendo métodos de REQUISIÇÃO
 
@@ -16,10 +29,12 @@ const server = http.createServer((req, res) => { // Criando meu servidor HTTP co
     }
 
     if (method === 'POST' && url === '/users') {
+        const { name, email } = req.body
+
         users.push({
             id: 1,
-            name: 'Cleyton',
-            email: 'cleyton@email.com'
+            name,
+            email,
         })
  
         return res.writeHead(201).end() // o 201 está simbolizando como OK, com sucesso na criação de algo

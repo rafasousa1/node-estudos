@@ -23,7 +23,7 @@ const server = http.createServer(async (req, res) => { // TODAS AS PORTAS DE ENT
 
     const fullStreamContent = Buffer.concat(buffers).toString() // Unindo todos os pedaços da stream em um único pedaço
 
-    res.end(fullStreamContent) // mandando como retorno do server, o array dos buffers, e como body a stream do fetch
+    res.end(fullStreamContent) // mandando como retorno do server, o array dos buffers, e como body a stream la do fetch
 
     // return req // reading
     // .pipe(new InverseNumberStream()) // transformiing
