@@ -1,4 +1,5 @@
 import http from 'node:http' // O padrão de importações ESMODULES hoje em dia é mais utilizado. O node: antes do nome do módulo indica que é nativo do node
+import { randomUUID} from 'node:crypto' // retornando um ID único
 import { json } from './middlewares/json.js'
 import { Database } from './database.js'
 
@@ -21,7 +22,7 @@ const server = http.createServer(async (req, res) => { // Criando meu servidor H
         const { name, email } = req.body
 
         const user = ({
-            id: 1,
+            id: randomUUID(), // criando um id único para o user
             name,
             email,
         })
