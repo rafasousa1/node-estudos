@@ -1,11 +1,12 @@
 import { Database } from "./database.js"
 import { randomUUID} from 'node:crypto' // retornando um ID único aleatório
+import { buildRouteUrl } from "./utils/build-route-url.js"
 
 const database = new Database() // Esta maneira de guardar informações em memória são aplicações stateful
 export const routes = [ // Array de cada rota com o método, o caminho e o que vai acontecer
     {
         method: 'GET',
-        url: '/users',
+        url: buildRouteUrl('/users'),
         handler: (req, res) => { // no handler coloco o que é executado do método
             const users = database.select('user') // Na listagem busco os usuários no database usando o select com o users para a variável
 
@@ -14,7 +15,7 @@ export const routes = [ // Array de cada rota com o método, o caminho e o que v
     },
     {
         method: 'POST',
-        url: '/users',
+        url: buildRouteUrl('/users'),
         handler: (req, res) => {
         const { name, email } = req.body
 
@@ -31,7 +32,7 @@ export const routes = [ // Array de cada rota com o método, o caminho e o que v
     },
     {
         method: 'DELETE',
-        url: '/users/ID', // com o DELETE eu uso um route parameter na URL para identificar um usuário específico a partir do ID
+        url: buildRouteUrl('/users/:id'), // com o DELETE eu uso um route parameter na URL para identificar um usuário específico a partir do ID
         handler: (req, res) => {
             return res.end()
         }
