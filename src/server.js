@@ -12,10 +12,14 @@ const server = http.createServer(async (req, res) => { // Criando meu servidor H
     const { method, url } = req // essas duas sendo métodos de REQUISIÇÃO
 
     const route = routes.find(route => { // Verifico se a rota requisitada tem o método igual ao que foi solicitado, e a url igual a que foi solicitada
-        return route.method === method && route.url === url
+        return route.method === method && route.url.test(url) // testando se a a regex criada bate com a url sendo recebida
     })
 
     if (route) {
+        const routeParms = req.url.match(route.url) // crio uma const para executar a regex na url para retornar qual os dados que encontrou na rota
+
+        console.log(routeParms)
+
         return route.handler(req, res) // Se a rota for encontrada então executa o handler
     }
 
