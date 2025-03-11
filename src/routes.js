@@ -34,7 +34,11 @@ export const routes = [ // Array de cada rota com o método, o caminho e o que v
         method: 'DELETE',
         url: buildRouteUrl('/users/:id'), // com o DELETE eu uso um route parameter na URL para identificar um usuário específico a partir do ID
         handler: (req, res) => {
-            return res.end()
+        const { id } = req.params
+
+        database.delete('user', id)
+
+        return res.writeHead(204).end()
         }
     }
 ]

@@ -16,9 +16,9 @@ const server = http.createServer(async (req, res) => { // Criando meu servidor H
     })
 
     if (route) {
-        const routeParms = req.url.match(route.url) // crio uma const para executar a regex na url para retornar qual os dados que encontrou na rota
+        const routeParams = req.url.match(route.url) // crio uma const para executar a regex na url para retornar qual os dados que encontrou na rota
 
-        console.log(routeParms)
+        req.params = {...routeParams.groups}
 
         return route.handler(req, res) // Se a rota for encontrada então executa o handler
     }
