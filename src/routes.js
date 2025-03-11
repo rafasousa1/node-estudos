@@ -31,6 +31,21 @@ export const routes = [ // Array de cada rota com o método, o caminho e o que v
         }
     },
     {
+        method: 'PUT',
+        url: buildRouteUrl('/users/:id'), // com o DELETE eu uso um route parameter na URL para identificar um usuário específico a partir do ID
+        handler: (req, res) => {
+        const { id } = req.params
+        const { name, email } = req.body
+
+        database.update('user', id, {
+            name,
+            email,
+        })
+
+        return res.writeHead(204).end()
+        }
+    },
+    {
         method: 'DELETE',
         url: buildRouteUrl('/users/:id'), // com o DELETE eu uso um route parameter na URL para identificar um usuário específico a partir do ID
         handler: (req, res) => {
