@@ -28,8 +28,16 @@ export class Database {
         return data
     }
 
-    select(table) { // O select passa a tabela que vai usar retornando todos os dados desta tabela
-        const data = this.#database[table] ?? [] // passo então a tabela selecionada e se não existir passa vazio.
+    select(table, search) { // O select passa a tabela que vai usar retornando todos os dados desta tabela
+        let data = this.#database[table] ?? [] // passo então a tabela selecionada e se não existir passa vazio.
+
+        if (search) {
+            data = data.filter(row => {
+                return Object.entries(search).some(([key, value]) => {
+                    return row[key].toLowerCase().includes(value.toLowerCase())
+                })
+            })
+        }
 
         return data
     }

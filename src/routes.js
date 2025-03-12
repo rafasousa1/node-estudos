@@ -8,8 +8,11 @@ export const routes = [ // Array de cada rota com o método, o caminho e o que v
         method: 'GET',
         url: buildRouteUrl('/users'),
         handler: (req, res) => { // no handler coloco o que é executado do método
-            const users = database.select('user') // Na listagem busco os usuários no database usando o select com o users para a variável
-            console.log(req.query)
+            const { search } = req.query
+            const users = database.select('user', search ? { // Na listagem busco os usuários no database usando o select com o users para a variável
+                name: search,
+                email: search,
+            } : null)
 
             return res.end(JSON.stringify(users)) // O node não pode retornar um array, então usamos o JSON para converter os dados para serem então mostrados na tela
         }
@@ -55,6 +58,6 @@ export const routes = [ // Array de cada rota com o método, o caminho e o que v
         database.delete('user', id)
 
         return res.writeHead(204).end()
-        }
+        }   
     }
 ]
